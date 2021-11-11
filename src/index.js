@@ -15,6 +15,7 @@ import Header from "./components/Header";
 import { height, width } from "./modules";
 import chevronL from "./assets/chevronL.png";
 import chevronR from "./assets/chevronR.png";
+import ModalNormal from "../../../src/components/molecules/Modal/Modal";
 
 const DateRangePicker = ({
   moment,
@@ -48,6 +49,7 @@ const DateRangePicker = ({
   presetButtons,
   open,
 }) => {
+  const [modalVisible, setModalVisible] = useState(false)
   const [isOpen, setIsOpen] = useState(false);
   const [weeks, setWeeks] = useState([]);
   const [selecting, setSelecting] = useState(false);
@@ -93,10 +95,14 @@ const DateRangePicker = ({
   };
 
   const onOpen = () => {
+    console.log('opa')
     setIsOpen(true);
+    setModalVisible(true)
   };
 
   const onClose = () => {
+    setModalVisible(false)
+    console.log(modalVisible)
     setIsOpen(false);
     setSelecting(false);
     if (!endDate) {
@@ -323,15 +329,9 @@ const DateRangePicker = ({
     </View>
   );
 
-  return isOpen ? (
+  return (
     <>
-      <View style={mergedStyles.backdrop}>
-        <TouchableWithoutFeedback
-          style={styles.closeTrigger}
-          onPress={_onClose}
-        >
-          <View style={styles.closeContainer} />
-        </TouchableWithoutFeedback>
+      <ModalNormal style={mergedStyles.backdrop} visible={modalVisible} setVisible={_onClose}>
         <View>
           <View style={mergedStyles.container}>
             <View style={styles.header}>
@@ -396,12 +396,10 @@ const DateRangePicker = ({
             )}
           </View>
         </View>
-      </View>
+      </ModalNormal>
       {node}
     </>
-  ) : (
-    <>{node}</>
-  );
+  )
 };
 
 export default DateRangePicker;
@@ -437,11 +435,11 @@ const styles = StyleSheet.create({
   backdrop: {
     backgroundColor: "rgba(0,0,0,0.6)",
     position: "absolute",
-    width: width,
-    height: height,
+    width: '100%',
+    height: '100%',
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 2147483647,
+    zIndex: 99999999999999999,
   },
   container: {
     backgroundColor: "white",
@@ -449,8 +447,8 @@ const styles = StyleSheet.create({
     width: width * 0.85,
   },
   closeTrigger: {
-    width: width,
-    height: height,
+    width: '100%',
+    height: '100%',
   },
   closeContainer: {
     width: "100%",
